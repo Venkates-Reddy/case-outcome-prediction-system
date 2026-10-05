@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Case Outcome Prediction System – Architecture</title>
+<style>
+:root{--bg:#fff;--card:#fff;--ink:#141414;--mute:#666;--line:#d4d4d4;--blue:#8a8f98;--blueb:#f4f5f7;--pur:#1a1a1a;--purb:#f7f7f7;--sh:rgba(0,0,0,.06);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121212;--card:#1c1c1c;--ink:#f2f2f2;--mute:#a0a0a0;--line:#4a4a4a;--blue:#9ba0a8;--blueb:#262626;--pur:#f2f2f2;--purb:#2a2a2a;--sh:rgba(0,0,0,.4)}}
+:root[data-theme="dark"]{--bg:#121212;--card:#1c1c1c;--ink:#f2f2f2;--mute:#a0a0a0;--line:#4a4a4a;--blue:#9ba0a8;--blueb:#262626;--pur:#f2f2f2;--purb:#2a2a2a;--sh:rgba(0,0,0,.4)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+header{padding:14px 18px 4px}
+h1{font-size:21px;margin:0;font-weight:650}
+.sub{font-size:13px;color:var(--mute);margin-top:2px}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;padding:8px 18px}
+button{font:inherit;font-size:14px;padding:8px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;cursor:pointer}
+button.on{border-color:var(--blue);color:var(--blue);background:var(--blueb);font-weight:600}
+button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+#cap{margin:2px 18px 4px;font-size:17px;font-weight:600;min-height:28px}
+.wrap{overflow-x:auto;padding:0 12px}
+svg{display:block;width:100%;min-width:900px;max-width:1400px;margin:0 auto;height:auto}
+svg text{font-family:inherit;fill:var(--ink);text-anchor:middle}
+.box{fill:var(--card);stroke-width:2;filter:drop-shadow(0 2px 4px var(--sh));transition:all .3s}
+.app .box{stroke:var(--blue)}
+.app.on .box{fill:var(--blueb);stroke-width:3.5}
+.ai .box{stroke:var(--pur)}
+.t{font-size:19px;font-weight:650}
+.li{font-size:15px;fill:var(--mute)}
+.sm{font-size:13px;fill:var(--mute)}
+.eng .box{fill:var(--purb);stroke-width:3}
+.eng.on .box{stroke-width:4}
+.pill .box{fill:var(--card);stroke:var(--pur);stroke-width:1.5;filter:none}
+.pill.on .box{fill:var(--pur);}
+.pill.on text{fill:var(--card)}
+.pill text{font-size:15px;font-weight:600}
+.ar{fill:none;stroke:var(--line);stroke-width:2.2;marker-end:url(#a)}
+.ar.nm{marker-end:none}
+#dot{fill:var(--pur);opacity:0;filter:drop-shadow(0 0 5px rgba(0,0,0,.35))}
+.lg{display:flex;flex-wrap:wrap;gap:6px 22px;padding:8px 18px 18px;font-size:14px;color:var(--mute)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:4px;border:2px solid;vertical-align:-2px;margin-right:6px}
+</style></head><body>
+<header><h1>Case Outcome Prediction System</h1><div class="sub">Decision support – the prediction is not a legal judgment. Runs locally.</div></header>
+<div class="ctl" id="ctl"></div>
+<div id="cap" aria-live="polite">&nbsp;</div>
+<div class="wrap"><svg viewBox="0 0 1280 700" role="img" aria-label="Simple architecture of the case outcome prediction system">
+<defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L8 4L0 8z" fill="#8a8a8a"/></marker></defs>
+<!-- arrows -->
+<path class="ar" d="M270 155V172H425V192"/><path class="ar nm" d="M580 155V172H425"/>
+<path class="ar" d="M425 248V290"/>
+<path class="ar" d="M900 442H635"/>
+<path class="ar" d="M425 515V555"/>
+<path class="ar" d="M215 615H60V85H130"/>
+<path class="ar" d="M1070 155V200"/>
+<path class="ar" d="M1070 280V352H625"/>
+<text class="sm" x="60" y="640" style="text-anchor:start">Result returns</text>
+<!-- interfaces -->
+<g class="app" id="user"><rect class="box" x="130" y="15" width="280" height="140" rx="14"/><text class="t" x="270" y="45">User</text><text class="li" x="270" y="76">Enter case details</text><text class="li" x="270" y="100">Upload documents</text><text class="li" x="270" y="124">View result</text></g>
+<g class="app" id="lawyer"><rect class="box" x="440" y="15" width="280" height="140" rx="14"/><text class="t" x="580" y="45">Lawyer</text><text class="li" x="580" y="72">Enter case details</text><text class="li" x="580" y="94">Upload documents</text><text class="li" x="580" y="116">View prediction</text><text class="li" x="580" y="138">View previous cases</text></g>
+<g class="app" id="admin"><rect class="box" x="900" y="15" width="340" height="140" rx="14"/><text class="t" x="1070" y="45">Admin</text><text class="li" x="1070" y="72">Manage users</text><text class="li" x="1070" y="94">Manage dataset</text><text class="li" x="1070" y="116">Train / update model</text><text class="li" x="1070" y="138">View analytics</text></g>
+<!-- backend -->
+<g class="app" id="backend"><rect class="box" x="280" y="192" width="290" height="56" rx="14"/><text class="t" x="425" y="217">Backend</text><text class="sm" x="425" y="238">Case Processing</text></g>
+<!-- engine -->
+<g class="eng ai" id="engine"><rect class="box" x="215" y="290" width="420" height="225" rx="18"/><text class="t" x="425" y="320" style="fill:var(--pur)">AI / ML Engine</text></g>
+<g class="pill ai" id="doc"><rect class="box" x="235" y="336" width="230" height="44" rx="12"/><text x="350" y="364">Document Analysis</text></g>
+<g class="pill ai" id="prev"><rect class="box" x="235" y="392" width="230" height="44" rx="12"/><text x="350" y="420">Previous Case Analysis</text></g>
+<g class="pill ai" id="out"><rect class="box" x="235" y="448" width="230" height="44" rx="12"/><text x="350" y="476">Outcome Prediction</text></g>
+<g class="pill ai" id="ml"><rect class="box" x="490" y="336" width="130" height="44" rx="12"/><text x="555" y="364">Local ML Model</text></g>
+<g class="ai" id="llm"><rect class="box" x="490" y="392" width="130" height="44" rx="12" style="fill:var(--card);stroke-dasharray:5 4;stroke-width:1.5;filter:none"/><text class="sm" x="555" y="411" style="fill:var(--ink);font-size:13px">Local LLM (Ollama)</text><text class="sm" x="555" y="427" style="font-size:11px">optional · model TBD</text></g>
+<!-- previous cases -->
+<g class="app" id="pc"><rect class="box" x="900" y="402" width="340" height="80" rx="14"/><text class="t" x="1070" y="434">Previous Cases</text><text class="sm" x="1070" y="460" style="font-size:14px">Historical Case Data</text></g>
+<!-- result -->
+<g class="app" id="result"><rect class="box" x="215" y="555" width="420" height="120" rx="14"/><text class="t" x="425" y="585">Prediction Result</text><text class="li" x="425" y="613">Predicted Outcome</text><text class="li" x="425" y="637">Confidence</text><text class="li" x="425" y="661">Key Factors</text></g>
+<!-- admin mgmt -->
+<g class="app" id="mgmt"><rect class="box" x="900" y="200" width="340" height="80" rx="14"/><text class="t" x="1070" y="232">Dataset &amp; Model Management</text><text class="sm" x="1070" y="259" style="font-size:14px">Train / update · monitor</text></g>
+<circle id="dot" r="9" cx="0" cy="0"/>
+</svg></div>
+<div class="lg"><span><span class="sw" style="border-color:var(--blue);background:var(--blueb)"></span>Normal application (interfaces, backend, database, admin)</span><span><span class="sw" style="border-color:var(--pur);background:var(--purb)"></span>AI / ML (analysis and prediction)</span></div>
+<script>
+const $=id=>document.getElementById(id),dot=$("dot"),cap=$("cap"),ctl=$("ctl");
+const F={
+user:{c:"User / Lawyer submits the case and documents",s:[
+ {p:[[270,155],[270,172],[425,172],[425,192]],l:["user","lawyer","backend"],t:"1 · Case and documents go to the Backend"},
+ {p:[[425,248],[425,290]],l:["engine"],t:"2 · Backend passes the case to the AI / ML Engine"},
+ {p:[[425,290],[350,305],[350,358]],l:["doc"],t:"3 · Document Analysis reads the case documents"},
+ {p:[[900,442],[470,442],[470,414],[350,414]],l:["pc","prev"],t:"4 · Previous Case Analysis uses the Previous Cases"},
+ {p:[[350,414],[350,470]],l:["out","ml"],t:"5 · Outcome Prediction runs on the Local ML Model"},
+ {p:[[350,470],[350,527],[425,527],[425,555]],l:["result"],t:"6 · Prediction Result: outcome, confidence, key factors"},
+ {p:[[215,615],[60,615],[60,85],[130,85]],l:["user","lawyer"],t:"7 · Result returns to the User / Lawyer"}]},
+admin:{c:"Admin",s:[
+ {p:[[1070,155],[1070,200]],l:["admin","mgmt"],t:"1 · Admin opens Dataset & Model Management"},
+ {p:[[1070,280],[1070,352],[625,352]],l:["ml","engine"],t:"2 · Dataset and model are updated in the Local ML Model"}]}};
+let cur="user",run=0;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const rm=()=>matchMedia("(prefers-reduced-motion:reduce)").matches;
+function clear(){document.querySelectorAll(".on").forEach(e=>e.classList.remove("on"));dot.style.opacity=0}
+function move(p,id){return new Promise(res=>{let L=[],T=0;for(let i=1;i<p.length;i++){const d=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);L.push(d);T+=d}
+ const dur=T/0.4,t0=performance.now();
+ (function f(t){if(id!==run)return res();const k=Math.min(1,(t-t0)/dur);let d=k*T,i=0;while(i<L.length-1&&d>L[i]){d-=L[i];i++}
+  const a=p[i],b=p[i+1],u=L[i]?d/L[i]:1;dot.setAttribute("cx",a[0]+(b[0]-a[0])*u);dot.setAttribute("cy",a[1]+(b[1]-a[1])*u);
+  k<1?requestAnimationFrame(f):res()})(t0)})}
+async function play(){const id=++run;clear();const f=F[cur];
+ if(cur==="admin"){$("admin").classList.add("on")}
+ for(const s of f.s){if(id!==run)return;cap.textContent=s.t;
+  dot.setAttribute("cx",s.p[0][0]);dot.setAttribute("cy",s.p[0][1]);dot.style.opacity=1;
+  if(!rm())await move(s.p,id);else await sleep(400);
+  if(id!==run)return;s.l.forEach(n=>$(n).classList.add("on"));await sleep(rm()?1000:450)}
+ if(id===run){dot.style.opacity=0}}
+[["user","User / Lawyer flow"],["admin","Admin flow"]].forEach(([k,n])=>{const b=document.createElement("button");b.textContent=n;b.id="b"+k;b.onclick=()=>{cur=k;sel();play()};ctl.appendChild(b)});
+const r=document.createElement("button");r.textContent="Replay";r.onclick=play;ctl.appendChild(r);
+function sel(){["user","admin"].forEach(k=>$("b"+k).classList.toggle("on",k===cur))}
+sel();play();
+</script></body></html>
